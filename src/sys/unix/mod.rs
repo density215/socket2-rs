@@ -473,6 +473,17 @@ impl Socket {
         }
     }
 
+    pub fn ipv6_unicast_hops(&self) -> io::Result<u32> {
+        unsafe {
+            let raw: c_int = self.getsockopt(libc::IPPROTO_IPV6, libc::IPV6_UNICAST_HOPS)?;
+            Ok(raw as u32)
+        }
+    }
+
+    pub fn set_ipv6_unicast_hops(&self, ttl: u32) -> io::Result<()> {
+        unsafe { self.setsockopt(libc::IPPROTO_IPV6, libc::IPV6_UNICAST_HOPS, ttl as c_int) }
+    }
+
     pub fn set_nodelay(&self, nodelay: bool) -> io::Result<()> {
         unsafe {
             self.setsockopt(libc::IPPROTO_TCP,

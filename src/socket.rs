@@ -243,6 +243,14 @@ impl Socket {
         self.inner.peek_from(buf)
     }
 
+    /// Receives data from the socket, also so-called 'ancillary data'. 
+    /// In IPv6 packets the latter contains the IPv6 and other headers.
+    /// On success, returns the number of bytes
+    /// read and the address from whence the data came.
+    pub fn recv_msg(&self, buf: &mut [u8]) -> io::Result<usize> {
+        self.inner.recv_msg(buf)
+    }
+
     /// Sends data on the socket to a connected peer.
     ///
     /// This is typically used on TCP sockets or datagram sockets which have
@@ -279,6 +287,23 @@ impl Socket {
     /// from this socket.
     pub fn set_ttl(&self, ttl: u32) -> io::Result<()> {
         self.inner.set_ttl(ttl)
+    }
+
+    /// Gets the value of the `IPV6_UNICAST_HOPS` option for this socket.
+    ///
+    /// For more information about this option, see [`ipv6_unicast_hops`][link].
+    ///
+    /// [link]: #method.set_ipv6_unicast_hops
+    pub fn ipv6_unicast_hops(&self) -> io::Result<u32> {
+        self.inner.ipv6_unicast_hops()
+    }
+
+    /// Sets the value for the `IPV6_UNICAST_HOPS` option on this socket.
+    ///
+    /// This value sets the hops time-out (comparable to time-to-live field in IPv4) that is used in every IPv6 packet sent
+    /// from this socket.
+    pub fn set_ipv6_unicast_hops(&self, ttl: u32) -> io::Result<()> {
+        self.inner.set_ipv6_unicast_hops(ttl)
     }
 
     /// Gets the value of the `IPV6_V6ONLY` option for this socket.
